@@ -2,6 +2,8 @@ package com.example.lado.mytaskmanager;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,12 +15,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,21 +43,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Creating alert Dialog with one Button
-        //final AlertDialog.Builder alertDialog = new AlertDialog.Builder(MainActivity.this);
-
-        // Setting Dialog Title
-        //alertDialog.setTitle("Add a new Task");
-
-        // Setting Dialog Message
-        //alertDialog.setMessage("What do you want to do?");
-
         final DBHelper dbHelper = new DBHelper(MainActivity.this);
 
-        final ListView textView = (ListView) findViewById(R.id.TODO);
+        final SwipeMenuListView textView = (SwipeMenuListView) findViewById(R.id.TODO);
+
 
         //List of tasks
         List<String> list = new ArrayList<>();
+        //String st="";
         StringBuilder jokeStringBuilder = new StringBuilder();
         for (String s : dbHelper.getAllCotacts()) {
             jokeStringBuilder.append(s + "\n");
@@ -60,6 +63,69 @@ public class MainActivity extends AppCompatActivity {
                 list);
 
         textView.setAdapter(arrayAdapter);
+
+        //swipe menu
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "open" item
+                SwipeMenuItem openItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                openItem.setWidth(500);
+                // set item title
+                openItem.setTitle("Open");
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(500);
+                // set item title
+                deleteItem.setTitle("Delete");
+                // set item title fontsize
+                deleteItem.setTitleSize(18);
+                // set item title font color
+                deleteItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+        };
+
+        //set menu
+        textView.setMenuCreator(creator);
+
+        //make swipe menu clickable
+        textView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        Toast.makeText(MainActivity.this, "Opened", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        //swipe direction
+        textView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
 
         //make button clickable
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -98,6 +164,8 @@ public class MainActivity extends AppCompatActivity {
                 }).setNegativeButton("Cancel", null).create().show();
             }
         });
+
+
     }
 
     @Override
