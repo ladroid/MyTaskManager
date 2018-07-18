@@ -8,7 +8,7 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
     <!--android:text="Hello World!"-->
-    <TextView
+    <ListView
         android:id="@+id/TODO"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
