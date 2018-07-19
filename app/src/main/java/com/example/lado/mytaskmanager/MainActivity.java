@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,10 +27,13 @@ import com.baoyz.swipemenulistview.SwipeMenu;
 import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
+import com.mahfa.dnswitch.DayNightSwitch;
+import com.mahfa.dnswitch.DayNightSwitchListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         final DBHelper dbHelper = new DBHelper(MainActivity.this);
 
         final SwipeMenuListView textView = (SwipeMenuListView) findViewById(R.id.TODO);
-
 
         //List of tasks
         List<String> list = new ArrayList<>();
@@ -117,7 +120,10 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Opened", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
+                        dbHelper.deleteContact(index);
+                        Log.e("DELETE", "DELETE -> " + dbHelper.getAllCotacts());
                         Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(MainActivity.this, MainActivity.class));
                         break;
                 }
                 return false;
@@ -164,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
                 }).setNegativeButton("Cancel", null).create().show();
             }
         });
-
-
     }
 
     @Override
@@ -184,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             return true;
         }
 
