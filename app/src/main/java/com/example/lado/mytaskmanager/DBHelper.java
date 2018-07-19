@@ -56,9 +56,12 @@ public class DBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer deleteContact (Integer id) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(CONTACTS_TABLE_NAME,"id = ? ", new String[] { Integer.toString(id) });
+    public void deleteContact (Integer id) {
+        final SQLiteDatabase db = getWritableDatabase();
+        final String whereClause = CONTACTS_COLUMN_ID  + "=?";
+        final String[] whereArgs = new String[] { String.valueOf(id) };
+        db.delete(CONTACTS_TABLE_NAME, whereClause, whereArgs);
+        db.close();
     }
 
     public ArrayList<String> getAllCotacts() {

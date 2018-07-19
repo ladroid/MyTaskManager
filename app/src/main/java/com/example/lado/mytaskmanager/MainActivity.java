@@ -120,10 +120,12 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, "Opened", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
-                        dbHelper.deleteContact(index);
+                        Log.e("POSITION", "POSITION " + position);
+                        dbHelper.deleteContact(position);
+                        startActivity(new Intent(MainActivity.this, MainActivity.class));
                         Log.e("DELETE", "DELETE -> " + dbHelper.getAllCotacts());
                         Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, MainActivity.class));
+
                         break;
                 }
                 return false;
