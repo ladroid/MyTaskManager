@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case 1:
                         Log.e("POSITION", "POSITION " + position);
-                        dbHelper.deleteContact(position);
+                        dbHelper.deleteContact(String.valueOf(position+1));
                         startActivity(new Intent(MainActivity.this, MainActivity.class));
                         Log.e("DELETE", "DELETE -> " + dbHelper.getAllCotacts());
                         Toast.makeText(MainActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
