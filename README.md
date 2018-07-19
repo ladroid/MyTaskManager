@@ -128,8 +128,8 @@ By this method I update my db. I did the same things below except update, where 
 Now delete
 
 ```java
-SQLiteDatabase db = this.getWritableDatabase();
-return db.delete(CONTACTS_TABLE_NAME,"id = ? ", new String[] { Integer.toString(id) });
+SQLiteDatabase db = getWritableDatabase();
+db.execSQL("DELETE FROM " + CONTACTS_TABLE_NAME + " WHERE " + CONTACTS_COLUMN_ID + "=\"" + id + "\";");
 ```
 
 I delete data by id.
@@ -160,6 +160,110 @@ Next line means that we position the cursor on the first row of the sample.
 
 And after I return my arraylist.
 
-**In my project I don't add delete. It doesn't means that this method doesn't work) I just want make it by swapping:)**
+I did delete method by swiping. How I did it?
+
+1) Add this in **gradle** 
+
+```
+implementation 'com.baoyz.swipemenulistview:library:1.3.0'
+```
+
+2) Change in xml file from **ListView** to this
+
+```xml
+<com.baoyz.swipemenulistview.SwipeMenuListView
+        android:id="@+id/TODO"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:lines="10"
+        android:textSize="24dp"
+        android:maxLines = "10"
+        android:scrollbars = "vertical"
+        android:scrollbarStyle="insideOverlay"
+        android:fadeScrollbars="true"
+        android:fadingEdge="vertical"/>
+```
+
+3) Add this code
+
+```java
+//swipe menu
+SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "open" item
+                SwipeMenuItem openItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));
+                // set item width
+                openItem.setWidth(500);
+                // set item title
+                openItem.setTitle("Open");
+                // set item title fontsize
+                openItem.setTitleSize(18);
+                // set item title font color
+                openItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(openItem);
+
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getApplicationContext());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                deleteItem.setWidth(500);
+                // set item title
+                deleteItem.setTitle("Delete");
+                // set item title fontsize
+                deleteItem.setTitleSize(18);
+                // set item title font color
+                deleteItem.setTitleColor(Color.WHITE);
+                // add to menu
+                menu.addMenuItem(deleteItem);
+            }
+};
+```
+
+4) Set menu
+
+```java
+//set menu
+textView.setMenuCreator(creator);
+```
+
+5) Make a menu for our swipe
+
+```java
+//make swipe menu clickable
+textView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        ...
+                        break;
+                    case 1:
+                        ...
+                        break;
+                }
+            }
+}
+```
+
+6) The last I add my delete method in **case1:**.
+
+```java
+dbHelper.deleteContact(String.valueOf(position+1));
+startActivity(new Intent(MainActivity.this, MainActivity.class));
+```
 
 And that's it. Soon I will add new features in this project. Thanks.
